@@ -4,8 +4,13 @@ namespace App\Actions\Fortify;
 
 use App\Concerns\PasswordValidationRules;
 use App\Concerns\ProfileValidationRules;
+use App\Enums\OrganizationRole;
+use App\Models\Membership;
+use App\Models\Organization;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
 
 class CreateNewUser implements CreatesNewUsers
@@ -24,10 +29,27 @@ class CreateNewUser implements CreatesNewUsers
             'password' => $this->passwordRules(),
         ])->validate();
 
-        return User::create([
-            'name' => $input['name'],
-            'email' => $input['email'],
-            'password' => $input['password'],
-        ]);
+        return DB::transaction(function () use ($input) {
+            $user = User::create([
+                'name' => $input['name'],
+                'email' => $input['email'],
+                'password' => $input['password'],
+            ]);
+
+            $organization = Organization::create([
+                'name' => $user->name."'s Organization",
+                'slug' => Str::slug($user->name.'-'.Str::random(6)),
+                'personal' => true,
+            ]);
+
+            $user->organizations()->attach($organization, [
+                'id' => Membership::generatePrefixedUlid(),
+                'role' => OrganizationRole::Owner,
+            ]);
+
+            $user->update(['current_organization_id' => $organization->id]);
+
+            return $user;
+        });
     }
 }

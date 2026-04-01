@@ -2,6 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Enums\OrganizationRole;
+use App\Models\Membership;
+use App\Models\Organization;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
@@ -34,6 +37,26 @@ class UserFactory extends Factory
             'two_factor_recovery_codes' => null,
             'two_factor_confirmed_at' => null,
         ];
+    }
+
+    /**
+     * Configure the model factory.
+     */
+    public function configure(): static
+    {
+        return $this->afterCreating(function (User $user) {
+            $organization = Organization::factory()->personal()->create([
+                'name' => $user->name."'s Organization",
+                'slug' => Str::slug($user->name.'-'.Str::random(6)),
+            ]);
+
+            $user->organizations()->attach($organization, [
+                'id' => Membership::generatePrefixedUlid(),
+                'role' => OrganizationRole::Owner,
+            ]);
+
+            $user->update(['current_organization_id' => $organization->id]);
+        });
     }
 
     /**
