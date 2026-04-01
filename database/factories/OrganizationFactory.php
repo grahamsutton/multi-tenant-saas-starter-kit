@@ -23,17 +23,6 @@ class OrganizationFactory extends Factory
         return [
             'name' => $name,
             'slug' => Str::slug($name),
-            'personal' => false,
         ];
-    }
-
-    /**
-     * Indicate that the organization is a personal organization.
-     */
-    public function personal(): static
-    {
-        return $this->state(fn (array $attributes) => [
-            'personal' => true,
-        ]);
     }
 }

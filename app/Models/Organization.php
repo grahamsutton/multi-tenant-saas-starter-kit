@@ -11,23 +11,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Cashier\Billable;
 
-#[Fillable(['name', 'slug', 'personal'])]
+#[Fillable(['name', 'slug'])]
 class Organization extends Model
 {
     /** @use HasFactory<OrganizationFactory> */
     use Billable, HasFactory, HasPrefixedUlid;
 
     protected static string $ulidPrefix = 'org';
-
-    /**
-     * @return array<string, string>
-     */
-    protected function casts(): array
-    {
-        return [
-            'personal' => 'boolean',
-        ];
-    }
 
     /**
      * @return BelongsToMany<User, $this>

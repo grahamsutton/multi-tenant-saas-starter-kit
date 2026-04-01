@@ -5,12 +5,11 @@ use App\Models\Membership;
 use App\Models\Organization;
 use App\Models\User;
 
-test('user factory creates a personal organization', function () {
+test('user factory creates an organization', function () {
     $user = User::factory()->create();
 
     expect($user->id)->toStartWith('usr_')
         ->and($user->current_organization_id)->not->toBeNull()
-        ->and($user->currentOrganization->personal)->toBeTrue()
         ->and($user->organizations)->toHaveCount(1);
 });
 

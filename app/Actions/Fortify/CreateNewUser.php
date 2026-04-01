@@ -27,6 +27,7 @@ class CreateNewUser implements CreatesNewUsers
         Validator::make($input, [
             ...$this->profileRules(),
             'password' => $this->passwordRules(),
+            'organization_name' => ['required', 'string', 'max:255'],
         ])->validate();
 
         return DB::transaction(function () use ($input) {
@@ -37,9 +38,8 @@ class CreateNewUser implements CreatesNewUsers
             ]);
 
             $organization = Organization::create([
-                'name' => $user->name."'s Organization",
-                'slug' => Str::slug($user->name.'-'.Str::random(6)),
-                'personal' => true,
+                'name' => $input['organization_name'],
+                'slug' => Str::slug($input['organization_name'].'-'.Str::random(6)),
             ]);
 
             $user->organizations()->attach($organization, [

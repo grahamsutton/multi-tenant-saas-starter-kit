@@ -14,7 +14,6 @@ export type Organization = {
     id: string;
     name: string;
     slug: string;
-    personal: boolean;
     created_at: string;
     updated_at: string;
 };

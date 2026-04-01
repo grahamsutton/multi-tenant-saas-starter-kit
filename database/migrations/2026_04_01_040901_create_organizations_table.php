@@ -15,7 +15,6 @@ return new class extends Migration
             $table->string('id')->primary();
             $table->string('name');
             $table->string('slug')->unique();
-            $table->boolean('personal')->default(false);
             $table->timestamps();
         });
     }

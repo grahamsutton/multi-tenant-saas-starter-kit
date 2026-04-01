@@ -45,8 +45,7 @@ class UserFactory extends Factory
     public function configure(): static
     {
         return $this->afterCreating(function (User $user) {
-            $organization = Organization::factory()->personal()->create([
-                'name' => $user->name."'s Organization",
+            $organization = Organization::factory()->create([
                 'slug' => Str::slug($user->name.'-'.Str::random(6)),
             ]);
 
