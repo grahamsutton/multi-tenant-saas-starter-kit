@@ -35,4 +35,13 @@ return [
         ],
     ],
 
+    'stripe' => [
+        'starter_monthly_price_id' => env('STRIPE_STARTER_MONTHLY_PRICE_ID'),
+        'starter_annual_price_id' => env('STRIPE_STARTER_ANNUAL_PRICE_ID'),
+        'professional_monthly_price_id' => env('STRIPE_PROFESSIONAL_MONTHLY_PRICE_ID'),
+        'professional_annual_price_id' => env('STRIPE_PROFESSIONAL_ANNUAL_PRICE_ID'),
+        'enterprise_monthly_price_id' => env('STRIPE_ENTERPRISE_MONTHLY_PRICE_ID'),
+        'enterprise_annual_price_id' => env('STRIPE_ENTERPRISE_ANNUAL_PRICE_ID'),
+    ],
+
 ];

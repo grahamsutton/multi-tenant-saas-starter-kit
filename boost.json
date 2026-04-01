@@ -5,10 +5,17 @@
     "guidelines": true,
     "mcp": true,
     "nightwatch_mcp": false,
+    "packages": [
+        "laravel/fortify"
+    ],
     "sail": false,
     "skills": [
+        "cashier-stripe-development",
         "laravel-best-practices",
         "wayfinder-development",
-        "pest-testing"
+        "pest-testing",
+        "inertia-vue-development",
+        "tailwindcss-development",
+        "fortify-development"
     ]
 }
