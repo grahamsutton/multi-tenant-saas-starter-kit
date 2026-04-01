@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-#[Fillable(['name', 'slug', 'stripe_monthly_price_id', 'stripe_annual_price_id', 'sort_order', 'is_active', 'trial_days'])]
+#[Fillable(['name', 'slug', 'stripe_monthly_price_id', 'stripe_annual_price_id', 'monthly_price', 'annual_price', 'sort_order', 'is_active', 'trial_days'])]
 class Plan extends Model
 {
     /** @use HasFactory<PlanFactory> */
@@ -23,6 +23,8 @@ class Plan extends Model
     protected function casts(): array
     {
         return [
+            'monthly_price' => 'integer',
+            'annual_price' => 'integer',
             'is_active' => 'boolean',
             'sort_order' => 'integer',
             'trial_days' => 'integer',

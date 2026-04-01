@@ -25,6 +25,8 @@ class PlanFactory extends Factory
             'slug' => Str::slug($name),
             'stripe_monthly_price_id' => 'price_'.fake()->regexify('[A-Za-z0-9]{24}'),
             'stripe_annual_price_id' => 'price_'.fake()->regexify('[A-Za-z0-9]{24}'),
+            'monthly_price' => fake()->randomElement([2900, 4900, 9900, 19900]),
+            'annual_price' => fake()->randomElement([29000, 49000, 99000, 199000]),
             'sort_order' => fake()->numberBetween(1, 100),
             'is_active' => true,
             'trial_days' => 0,

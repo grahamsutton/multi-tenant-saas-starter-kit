@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\OrganizationRole;
 use App\Models\Concerns\HasPrefixedUlid;
 use Database\Factories\OrganizationFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -36,5 +37,16 @@ class Organization extends Model
     public function memberships(): HasMany
     {
         return $this->hasMany(Membership::class);
+    }
+
+    /**
+     * Get the email address used for Stripe.
+     */
+    public function stripeEmail(): ?string
+    {
+        return $this->users()
+            ->wherePivot('role', OrganizationRole::Owner)
+            ->first()
+            ?->email;
     }
 }

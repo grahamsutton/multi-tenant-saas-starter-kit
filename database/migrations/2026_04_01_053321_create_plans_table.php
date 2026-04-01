@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->string('stripe_monthly_price_id')->nullable();
             $table->string('stripe_annual_price_id')->nullable();
+            $table->unsignedInteger('monthly_price')->default(0);
+            $table->unsignedInteger('annual_price')->default(0);
             $table->integer('sort_order')->default(0);
             $table->boolean('is_active')->default(true);
             $table->unsignedInteger('trial_days')->default(0);
@@ -29,6 +31,8 @@ return new class extends Migration
             'slug' => 'starter',
             'stripe_monthly_price_id' => config('services.stripe.starter_monthly_price_id'),
             'stripe_annual_price_id' => config('services.stripe.starter_annual_price_id'),
+            'monthly_price' => 2900,
+            'annual_price' => 29000,
             'sort_order' => 1,
             'trial_days' => 0,
         ]);
@@ -38,6 +42,8 @@ return new class extends Migration
             'slug' => 'professional',
             'stripe_monthly_price_id' => config('services.stripe.professional_monthly_price_id'),
             'stripe_annual_price_id' => config('services.stripe.professional_annual_price_id'),
+            'monthly_price' => 9900,
+            'annual_price' => 99000,
             'sort_order' => 2,
             'trial_days' => 14,
         ]);
@@ -47,6 +53,8 @@ return new class extends Migration
             'slug' => 'enterprise',
             'stripe_monthly_price_id' => config('services.stripe.enterprise_monthly_price_id'),
             'stripe_annual_price_id' => config('services.stripe.enterprise_annual_price_id'),
+            'monthly_price' => 19900,
+            'annual_price' => 199000,
             'sort_order' => 3,
             'trial_days' => 0,
         ]);
