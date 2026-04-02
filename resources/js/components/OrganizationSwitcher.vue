@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { router, usePage } from '@inertiajs/vue3';
-import { ChevronsUpDown, Check } from 'lucide-vue-next';
+import { Link, router, usePage } from '@inertiajs/vue3';
+import { Check, ChevronsUpDown } from 'lucide-vue-next';
 import { computed, ref } from 'vue';
 import OrganizationSwitchController from '@/actions/App/Http/Controllers/OrganizationSwitchController';
+import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -15,10 +16,11 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
+import { dashboard } from '@/routes';
 import type { Organization } from '@/types';
 
 withDefaults(defineProps<{
-    variant?: 'sidebar' | 'header';
+    variant?: 'sidebar' | 'footer' | 'icon';
 }>(), {
     variant: 'sidebar',
 });
@@ -26,13 +28,14 @@ withDefaults(defineProps<{
 const page = usePage();
 const currentOrganization = computed(() => page.props.auth.currentOrganization);
 const organizations = computed(() => page.props.auth.organizations ?? []);
+const hasMultipleOrgs = computed(() => organizations.value.length > 1);
 
 const switching = ref(false);
 
 function switchOrganization(organization: Organization) {
     if (organization.id === currentOrganization.value?.id) {
-return;
-}
+        return;
+    }
 
     switching.value = true;
     router.visit(OrganizationSwitchController.url(organization), {
@@ -55,18 +58,33 @@ function getOrgInitials(name: string): string {
 </script>
 
 <template>
-    <!-- Sidebar variant: uses SidebarMenu components -->
+    <!-- Sidebar variant -->
     <template v-if="variant === 'sidebar'">
         <SidebarMenu>
             <SidebarMenuItem>
-                <DropdownMenu>
+                <!-- Single org: link to dashboard -->
+                <SidebarMenuButton v-if="!hasMultipleOrgs" size="lg" as-child>
+                    <Link :href="dashboard()">
+                        <div
+                            class="flex aspect-square size-8 items-center justify-center rounded-md border text-sm font-medium"
+                        >
+                            {{ getOrgInitials(currentOrganization?.name ?? '') }}
+                        </div>
+                        <div class="ml-1 grid flex-1 text-left text-sm leading-tight">
+                            <span class="truncate font-semibold">{{ currentOrganization?.name }}</span>
+                        </div>
+                    </Link>
+                </SidebarMenuButton>
+
+                <!-- Multiple orgs: dropdown switcher -->
+                <DropdownMenu v-else>
                     <DropdownMenuTrigger as-child>
                         <SidebarMenuButton
                             size="lg"
                             class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                         >
                             <div
-                                class="flex aspect-square size-8 items-center justify-center rounded-md border text-xs font-medium"
+                                class="flex aspect-square size-8 items-center justify-center rounded-md border text-sm font-medium"
                             >
                                 {{ getOrgInitials(currentOrganization?.name ?? '') }}
                             </div>
@@ -106,24 +124,76 @@ function getOrgInitials(name: string): string {
         </SidebarMenu>
     </template>
 
-    <!-- Header variant: plain dropdown button -->
-    <template v-else>
+    <!-- Footer variant: matches NavUser dropdown style -->
+    <template v-else-if="variant === 'footer' && hasMultipleOrgs">
+        <SidebarMenu>
+            <SidebarMenuItem>
+                <DropdownMenu>
+                    <DropdownMenuTrigger as-child>
+                        <SidebarMenuButton
+                            size="lg"
+                            class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                        >
+                            <div
+                                class="flex aspect-square size-8 items-center justify-center rounded-md border text-sm font-medium"
+                            >
+                                {{ getOrgInitials(currentOrganization?.name ?? '') }}
+                            </div>
+                            <div class="grid flex-1 text-left text-sm leading-tight">
+                                <span class="truncate font-medium">{{ currentOrganization?.name }}</span>
+                            </div>
+                            <ChevronsUpDown class="ml-auto size-4" />
+                        </SidebarMenuButton>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent
+                        class="w-(--reka-dropdown-menu-trigger-width) min-w-56 rounded-lg"
+                        side="top"
+                        align="end"
+                        :side-offset="4"
+                    >
+                        <DropdownMenuLabel class="text-xs text-muted-foreground">Switch organization</DropdownMenuLabel>
+                        <DropdownMenuItem
+                            v-for="org in organizations"
+                            :key="org.id"
+                            class="cursor-pointer gap-2 p-2"
+                            :disabled="switching"
+                            @click="switchOrganization(org)"
+                        >
+                            <div
+                                class="flex size-6 items-center justify-center rounded-sm border text-[0.625rem] font-medium"
+                            >
+                                {{ getOrgInitials(org.name) }}
+                            </div>
+                            <span class="truncate">{{ org.name }}</span>
+                            <Check
+                                v-if="org.id === currentOrganization?.id"
+                                class="ml-auto size-4 shrink-0"
+                            />
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            </SidebarMenuItem>
+        </SidebarMenu>
+    </template>
+
+    <!-- Icon variant: compact icon button for header toolbar -->
+    <template v-else-if="variant === 'icon' && hasMultipleOrgs">
         <DropdownMenu>
             <DropdownMenuTrigger as-child>
-                <button
-                    class="inline-flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium transition-colors hover:bg-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    class="relative size-10 w-auto cursor-pointer rounded-full p-1 focus-within:ring-2 focus-within:ring-primary"
                 >
                     <div
-                        class="flex size-6 items-center justify-center rounded-sm border text-[0.625rem] font-medium"
+                        class="flex size-8 items-center justify-center rounded-full border text-sm font-medium"
                     >
                         {{ getOrgInitials(currentOrganization?.name ?? '') }}
                     </div>
-                    <span class="hidden truncate sm:inline">{{ currentOrganization?.name }}</span>
-                    <ChevronsUpDown class="size-4 opacity-50" />
-                </button>
+                </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" class="w-64 rounded-lg">
-                <DropdownMenuLabel class="text-xs text-muted-foreground">Organizations</DropdownMenuLabel>
+            <DropdownMenuContent align="end" class="w-64 rounded-lg">
+                <DropdownMenuLabel class="text-xs text-muted-foreground">Switch organization</DropdownMenuLabel>
                 <DropdownMenuItem
                     v-for="org in organizations"
                     :key="org.id"

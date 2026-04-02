@@ -2,6 +2,7 @@
 import { Link, usePage } from '@inertiajs/vue3';
 import { BookOpen, Folder, LayoutGrid, Menu, Search } from 'lucide-vue-next';
 import { computed } from 'vue';
+import AppLogo from '@/components/AppLogo.vue';
 import AppLogoIcon from '@/components/AppLogoIcon.vue';
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import OrganizationSwitcher from '@/components/OrganizationSwitcher.vue';
@@ -146,7 +147,9 @@ const rightNavItems: NavItem[] = [
                     </Sheet>
                 </div>
 
-                <OrganizationSwitcher variant="header" />
+                <Link :href="dashboard()" class="flex items-center gap-x-2">
+                    <AppLogo />
+                </Link>
 
                 <!-- Desktop Menu -->
                 <div class="hidden h-full lg:flex lg:flex-1">
@@ -235,6 +238,8 @@ const rightNavItems: NavItem[] = [
                             </template>
                         </div>
                     </div>
+
+                    <OrganizationSwitcher variant="icon" />
 
                     <DropdownMenu>
                         <DropdownMenuTrigger :as-child="true">

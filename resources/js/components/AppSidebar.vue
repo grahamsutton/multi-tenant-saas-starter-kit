@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import { Link } from '@inertiajs/vue3';
 import { BookOpen, FolderGit2, LayoutGrid } from 'lucide-vue-next';
+import AppLogo from '@/components/AppLogo.vue';
 import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
 import NavUser from '@/components/NavUser.vue';
@@ -9,6 +11,9 @@ import {
     SidebarContent,
     SidebarFooter,
     SidebarHeader,
+    SidebarMenu,
+    SidebarMenuButton,
+    SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
 import type { NavItem } from '@/types';
@@ -38,7 +43,15 @@ const footerNavItems: NavItem[] = [
 <template>
     <Sidebar collapsible="icon" variant="inset">
         <SidebarHeader>
-            <OrganizationSwitcher variant="sidebar" />
+            <SidebarMenu>
+                <SidebarMenuItem>
+                    <SidebarMenuButton size="lg" as-child>
+                        <Link :href="dashboard()">
+                            <AppLogo />
+                        </Link>
+                    </SidebarMenuButton>
+                </SidebarMenuItem>
+            </SidebarMenu>
         </SidebarHeader>
 
         <SidebarContent>
@@ -47,6 +60,7 @@ const footerNavItems: NavItem[] = [
 
         <SidebarFooter>
             <NavFooter :items="footerNavItems" />
+            <OrganizationSwitcher variant="footer" />
             <NavUser />
         </SidebarFooter>
     </Sidebar>
