@@ -21,6 +21,7 @@ export type Organization = {
 export type Auth = {
     user: User;
     currentOrganization: Organization | null;
+    organizations: Organization[];
 };
 
 export type TwoFactorConfigContent = {
