@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { router, usePage } from '@inertiajs/vue3';
-import { ChevronsUpDown, Check, Building2, Plus } from 'lucide-vue-next';
+import { ChevronsUpDown, Check } from 'lucide-vue-next';
 import { computed, ref } from 'vue';
 import OrganizationSwitchController from '@/actions/App/Http/Controllers/OrganizationSwitchController';
 import {
@@ -8,22 +8,18 @@ import {
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuLabel,
-    DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
-    useSidebar,
 } from '@/components/ui/sidebar';
 import type { Organization } from '@/types';
 
-type Props = {
+withDefaults(defineProps<{
     variant?: 'sidebar' | 'header';
-};
-
-const props = withDefaults(defineProps<Props>(), {
+}>(), {
     variant: 'sidebar',
 });
 
@@ -34,7 +30,9 @@ const organizations = computed(() => page.props.auth.organizations ?? []);
 const switching = ref(false);
 
 function switchOrganization(organization: Organization) {
-    if (organization.id === currentOrganization.value?.id) return;
+    if (organization.id === currentOrganization.value?.id) {
+return;
+}
 
     switching.value = true;
     router.visit(OrganizationSwitchController.url(organization), {

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { Head, router } from '@inertiajs/vue3';
-import { ref, computed } from 'vue';
-import { Button } from '@/components/ui/button';
+import { ref } from 'vue';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
     Card,
     CardContent,
@@ -35,7 +35,7 @@ type Plan = {
     trial_days: number;
 };
 
-const props = defineProps<{
+defineProps<{
     plans: Plan[];
 }>();
 
